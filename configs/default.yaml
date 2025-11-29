@@ -1,0 +1,71 @@
+
+  # Which model to train
+  model:
+    name: vit_b_16
+
+  # Global settings
+  device: cuda
+
+  data:
+    num_workers: 4
+    augmentation: True
+
+  paths:
+    checkpoints: ./checkpoints
+    plots: ./plots
+
+  plotting:
+    ema_alpha: 0.5
+
+  saving:
+    save_interval: 10  # Save checkpoint and plot every N epochs (0 = only save at end)
+
+  # Model-specific settings
+  cnn:
+    num_classes: 10
+    D: 256
+    lr: 3.0e-4
+    weight_decay: 1.0e-4
+    epochs: 1000
+    batch_size: 64
+
+  resnet:
+    num_classes: 10
+    D: 128
+    lr: 1.0e-3
+    weight_decay: 1.0e-3
+    epochs: 1000
+    batch_size: 128
+    mixup_alpha: 1.0
+
+  linear:
+    num_classes: 10
+    hidden_dim: 32
+    lr: 3.0e-4
+    epochs: 50
+    batch_size: 64
+
+  vit:
+    num_classes: 10
+    D: 512
+    patch_size: 4
+    n_blocks: 8
+    n_heads: 8
+    lr: 1.0e-4
+    weight_decay: 1.0e-3
+    dropout: 0.2
+    epochs: 500
+    warmup: 10
+    batch_size: 256
+    mixup_alpha: 1.5
+
+  vit_b_16:
+    num_classes: 10
+    weights: "DEFAULT"
+    freeze_backbone: false  
+    lr: 1.0e-6
+    weight_decay: 1.0e-3
+    batch_size: 64
+    epochs: 200
+    mixup_alpha: 1.5
+    warmup: 1

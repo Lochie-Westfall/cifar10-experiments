@@ -1,0 +1,37 @@
+- Started with underfitting and slowing down around 50% - decided to disable augmentation initially to facilitate overfitting.
+	- Training was slow to start, which is expected for a Vision Transformer on this dataset. ![Training Plot](images/Pasted%20image%2020251123124826.png)
+- Added LayerNorm back (crucial for gradient flow, not just regularization) and increased batch size to 256 for speed.
+	- Improved overfitting, but training accuracy plateaued at 85%. Decided to increase model capacity. ![Training Plot](images/Pasted%20image%2020251123133038.png)
+- Experimented with model capacity; found that scaling depth and width simultaneously significantly slows down training.
+	- Adopted BERT guidelines for scaling.
+	- Identified and fixed implementation issues:
+		- Corrected `batch_first` setting in attention mechanism.
+		- Fixed LayerNorm and residual connection ordering to Pre-Norm formulation: `x + attention(norm(x))` instead of `norm(x) + attention(norm(x))`.
+	- Temporarily disabled augmentation.
+	- Result: Even a small model now easily overfits to 94%. ![Training Plot](images/Pasted%20image%2020251123144845.png)
+- Increased model width and depth slightly to push for 100% training accuracy.
+	- Achieved 100% training accuracy by epoch 34. ![Training Plot](images/Pasted%20image%2020251123145610.png)
+- Successfully overfit, so began introducing regularization.
+	- Added data augmentation (standard, no mixup yet): Achieved 77% test / 85% train. ![Training Plot](images/Pasted%20image%2020251123153242.png)
+	- Training accuracy dropped, suggesting need for more capacity or longer training.
+- Added Weight Decay and Mixup.
+	- Achieved 79% test / 82% train. ![Training Plot](images/Pasted%20image%2020251123161046.png)
+	- Difficult to train ViTs on small datasets without extensive regularization or pre-training.
+- Switched to MixCut.
+	- Outperformed Mixup, reaching 81% test accuracy in fewer epochs. ![Training Plot](images/Pasted%20image%2020251123165314.png)
+- Increased model capacity from small (4 layers, 256 hidden) to medium (8 layers, 512 hidden).
+	- Disabled scheduler to allow for manual intervention.
+	- Training was effective but slow; terminated early. ![Training Plot](images/Pasted%20image%2020251123181525.png)
+- Refined training schedule: 10 epoch warmup, reduced model size back to small.
+	- Achieved 85% test / 89% train. Moderate overfitting observed. ![Training Plot](images/Pasted%20image%2020251123224737.png)
+- Added Label Smoothing, Dropout (0.1), and Cosine Annealing. Increased depth to 8 layers.
+	- Achieved 88% test / 95% train. ![Training Plot](images/Pasted%20image%2020251124091717.png)
+- Increased regularization further: Dropout to 0.2, Mixup alpha to 1.5.
+	- Peaked at 87% test / 93% train. Likely over-regularized. ![Training Plot](images/Pasted%20image%2020251126094941.png)
+- Switched to `vit_b_16` (torchvision) to test pre-trained weights.
+	- Initial run with default weights (pre-trained):
+		- Rapidly achieved >96% test accuracy within a few epochs.
+	- Experimented with freezing the backbone:
+		- 94% test / 89% train.
+	- Unfroze backbone and added strong regularization (10x weight decay, 1.5 Mixup).
+	- Result: **98.48% test accuracy**. ![Training Plot](images/Pasted%20image%2020251126190244.png)

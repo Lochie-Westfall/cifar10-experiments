@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# PyTorch specific
+checkpoints/
+logs/
+runs/
+tensorboard/
+*.pt
+*.pth
+*.ckpt
+data/
+datasets/
+
+# IDE specific (optional, depending on your IDE)
+.idea/
+.vscode/
+*.swp
+*.bak
+*.swo
+
+# Operating System specific
+.DS_Store
+Thumbs.db
+
